@@ -126,14 +126,29 @@ def clash():
 
 @app.route('/live')
 def live_class():
-    today = datetime.datetime.today().weekday()
-    if today in [4, 5]:  # শুক্রবার ও শনিবার
-        zoom_link = "https://zoom.us/j/1234567890"  # তোমার Zoom Meeting URL
-        return render_template('live.html', zoom_link=zoom_link)
+    # আজকের দিন (0=Monday, 6=Sunday)
+    today = datetime.datetime.today()
+    weekday = today.weekday()  
+
+    # লাইভ ক্লাস শুক্রবার (4) ও শনিবার (5) চালু থাকবে
+    if weekday in [4, 5]:
+        zoom_link = "https://zoom.us/j/1234567890"  # এখানে তোমার আসল Zoom URL বসাও
+        return render_template(
+            'live.html',
+            zoom_link=zoom_link,
+            day_name=today.strftime("%A"),
+            date_str=today.strftime("%d %B %Y")
+        )
     else:
-        return render_template('class_closed.html')
+        return render_template(
+            'class_closed.html',
+            day_name=today.strftime("%A"),
+            date_str=today.strftime("%d %B %Y")
+        )
+
 
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
